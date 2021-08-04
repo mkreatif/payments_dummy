@@ -2,8 +2,7 @@ import 'dart:developer';
 
 import 'package:cobapluginmidpay/apiservice.dart';
 import 'package:flutter/material.dart';
-
-import 'package:midtrans/midtrans.dart';
+import 'package:midpay/midpay.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -16,23 +15,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final midtrans = Midtrans();
+  final midtrans = Midpay();
   ApiService _service = new ApiService();
   String _platformVersion = 'Unknown';
 
   @override
   void initState() {
     super.initState();
-    midtrans.init(MidtransConfig(
-        clientKey: 'SB-Mid-client-snpmAPlg6tp1bSsm',
-        merchantBaseUrl: 'https://nata.id/api-psikologimu/',
-        colorTheme: MidtransColorTheme(
-            lightPrimaryColor: Colors.deepOrange,
-            darkPrimaryColor: Colors.deepOrange,
-            secondaryColor: Colors.blueAccent)));
-    midtrans.setTransactionFinishCallback((result) {
-      print("Result ${result.status}");
-    });
+    midtrans.init(
+        'SB-Mid-client-snpmAPlg6tp1bSsm', 'https://nata.id/api-psikologimu/',
+        environment: Environment.sanbox);
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -52,7 +44,7 @@ class _MyAppState extends State<MyApp> {
             Uuid uuid = Uuid();
             await _service.getMidtrans(uuid.v1()).then((response) async {
               log("response : $response");
-              await midtrans.payTransactionWithToken(response['token']);
+              await midtrans.makePaymentToken(response['token']);
             });
           },
         ),
