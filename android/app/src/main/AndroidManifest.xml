@@ -10,7 +10,6 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="cobapluginmidpay"
         android:icon="@mipmap/ic_launcher"
-        android:theme="@style/AppTheme"
         tools:replace="android:label">
         <activity
             android:name=".MainActivity"
