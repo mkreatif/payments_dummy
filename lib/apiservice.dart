@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
+import 'package:cobapluginmidpay/paymentmodel.dart';
 import 'package:http/http.dart';
 
 class ApiService {
@@ -10,15 +11,18 @@ class ApiService {
   Client client = new Client();
 
   Future<Map<String, dynamic>> getMidtrans(String orderId) async {
+    PaymentModel paymentModel = new PaymentModel(
+        orderId: orderId,
+        grossAmount: 10000,
+        customerDetails:
+            new PCustomerDetail(email: "marlina.kreatif@gmail.com"),
+        itemDetails: [new PItemDetail(name: "Konsultasi Chat", price: 10000)]);
+
     try {
       var response = await client.post(
         "$baseUrlapi/charge/$orderId/",
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode(
-          <String, dynamic>{
-            "transaction_details": {"order_id": orderId, "gross_amount": 10000}
-          },
-        ),
+        body: jsonEncode(paymentModel.toMap()),
       );
 
       return jsonDecode(response.body);
